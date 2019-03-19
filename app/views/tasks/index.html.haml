@@ -1,0 +1,66 @@
+%h1 MyTask
+
+= link_to 'New Task', new_task_path,class: 'btn btn-inverse btn-mar'
+.container
+  .row
+    .col-md-12.filter
+      %h3 FILTER
+      .col-md-4
+        = form_tag  tasks_path, method: "get" do
+          = label_tag :status
+          = select_tag :status, options_for_select([['',nil],['undone', 0], ['done', 1]], params[:status]), class:'form-control'
+          = submit_tag "Filter", name: nil, class:' btn btn-default col-md-2 btn-mar'
+      .col-md-4
+        = form_tag  tasks_path, method: "get" do
+          = label_tag :priority
+          = select_tag :priority, options_for_select([['',nil],['low', 0], ['medium', 1],['hight',2]], params[:priority]), class:'form-control'
+          = submit_tag "Filter", name: nil, class:' btn btn-default col-md-2 btn-mar'
+      .col-md-4
+        = form_tag tasks_path, method: "get" do
+          = label_tag :due_date
+          = text_field_tag :due_date, nil, class:'form-control datepicker'
+          = submit_tag "Filter", name: nil, class:' btn btn-default col-md-2 btn-mar'
+.container
+  .row
+  %table.table.table-bordered.table-hover.table-responsive
+    %thead
+      %tr 
+        %th Name
+        %th Description
+        %th Status
+        %th Priority
+        %th Created at
+        %th Due date 
+        %th
+        %th
+
+    %tbody
+      - @task.each do |task|
+        %tr
+          %td= task.name
+          %td= task.description
+          - if (task.status == 0)
+            %td= link_to 'Undone', confirm_path(task), class: 'btn btn-default btn-tab'
+          - if (task.status == 1)
+            %td 
+              %button.btn.btn-success.btn-tab{:type => "button"} Done
+          - if (task.priority == 0)
+            %td
+              %button.btn.btn-primary.btn-tab{:type => "button"} Low
+          - if (task.priority == 1)
+            %td
+              %button.btn.btn-warning.btn-tab{:type => "button"} Medium
+          - if (task.priority == 2)
+            %td
+              %button.btn.btn-danger.btn-tab{:type => "button" } High
+          %td= task.created_at.strftime("%F")
+          %td= task.due_date.strftime("%F")
+          - if (task.created_by == current_user.id)
+            %td= link_to 'Edit', edit_task_path(task), class: 'btn btn-inverse btn-tab'
+            %td= link_to 'Destroy', task, method: :delete, data: { confirm: 'Are you sure?' },class: 'btn btn-reverse btn-tab'
+          - else  
+            %td= ''
+            %td= ''
+          
+
+

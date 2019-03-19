@@ -1,0 +1,35 @@
+
+.container
+.row
+.col-md-12.form
+  = form_for @task do |f|
+    - if @task.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@task.errors.count, "error")} prohibited this task from being saved:"
+        %ul
+          - @task.errors.full_messages.each do |message|
+            %li= message
+
+    .field.form-group.col-sm-6
+      = f.label :name
+      = f.text_field :name,class:'form-control',readonly: true
+    .field.form-group.col-sm-6
+      = f.label :description
+      = f.text_area :description,class:'form-control',readonly: true
+    .field.form-group.col-sm-6
+      = f.label :status
+      = f.select :status, options_for_select([['undone', 0], ['done', 1]], params[:status]),{prompt: true, selected: :status}, {required: 'true', autofocus: 'true', class: 'form-control'}
+    .field.form-group.col-sm-6
+      = f.label :priority
+      = f.select :priority, options_for_select({'low'=> 0, 'medium'=>1, 'high'=>2}, @task.priority),{}, {required: 'true', autofocus: 'true', class: 'form-control'}            
+    .field.form-group.col-sm-6
+      = f.label :created_date
+      = f.text_field :created_date, class:'form-control datepicker',readonly: true
+    .field.form-group.col-sm-6
+      = f.label :due_date
+      = f.text_field :due_date, class:'form-control datepicker',readonly: true
+    .actions.from-group.col-sm-12.btn
+      .col-sm-2
+        = f.submit 'Save', class: 'form-control btn btn-inverse'
+      .col-sm-2
+        = link_to 'Back', tasks_path, class: 'form-control btn btn-reverse'
